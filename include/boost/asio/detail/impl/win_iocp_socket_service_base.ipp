@@ -203,6 +203,10 @@ boost::system::error_code win_iocp_socket_service_base::cancel(
 
   BOOST_ASIO_HANDLER_OPERATION(("socket", &impl, "cancel"));
 
+#if defined(BOOST_ASIO_WINDOWS_UWP)
+  ec = boost::asio::error::operation_not_supported;
+#else
+
   if (FARPROC cancel_io_ex_ptr = ::GetProcAddress(
         ::GetModuleHandleA("KERNEL32"), "CancelIoEx"))
   {
@@ -268,6 +272,7 @@ boost::system::error_code win_iocp_socket_service_base::cancel(
     ec = boost::asio::error::operation_not_supported;
   }
 #endif // defined(BOOST_ASIO_ENABLE_CANCELIO)
+#endif // defined(BOOST_ASIO_WINDOWS_UWP)
 
   // Cancel any operations started via the reactor.
   if (!ec)

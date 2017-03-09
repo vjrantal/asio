@@ -11,6 +11,10 @@
 #ifndef BOOST_ASIO_DETAIL_CONFIG_HPP
 #define BOOST_ASIO_DETAIL_CONFIG_HPP
 
+#if defined(BOOST_ASIO_WINDOWS_UWP)
+#include <boost/asio/boost_asio_windows_uwp.hpp>
+#endif
+
 #if defined(BOOST_ASIO_STANDALONE)
 # define BOOST_ASIO_DISABLE_BOOST_ARRAY 1
 # define BOOST_ASIO_DISABLE_BOOST_ASSERT 1
@@ -698,6 +702,7 @@
 #endif // defined(__sun)
 
 // Serial ports.
+#if !defined(BOOST_ASIO_WINDOWS_UWP)
 #if !defined(BOOST_ASIO_HAS_SERIAL_PORT)
 # if defined(BOOST_ASIO_HAS_IOCP) \
   || !defined(BOOST_ASIO_WINDOWS) \
@@ -713,6 +718,7 @@
         //   && !defined(BOOST_ASIO_WINDOWS_RUNTIME)
         //   && !defined(__CYGWIN__)
 #endif // !defined(BOOST_ASIO_HAS_SERIAL_PORT)
+#endif // !defined(BOOST_ASIO_WINDOWS_UWP)
 
 // Windows: stream handles.
 #if !defined(BOOST_ASIO_HAS_WINDOWS_STREAM_HANDLE)

@@ -236,6 +236,10 @@ boost::system::error_code win_iocp_handle_service::cancel(
 
   BOOST_ASIO_HANDLER_OPERATION(("handle", &impl, "cancel"));
 
+#if defined(BOOST_ASIO_WINDOWS_UWP)
+  ec = boost::asio::error::operation_not_supported;
+#else
+
   if (FARPROC cancel_io_ex_ptr = ::GetProcAddress(
         ::GetModuleHandleA("KERNEL32"), "CancelIoEx"))
   {
@@ -289,6 +293,8 @@ boost::system::error_code win_iocp_handle_service::cancel(
     // so cancellation is not safe.
     ec = boost::asio::error::operation_not_supported;
   }
+
+#endif // defined(BOOST_ASIO_WINDOWS_UWP)
 
   return ec;
 }

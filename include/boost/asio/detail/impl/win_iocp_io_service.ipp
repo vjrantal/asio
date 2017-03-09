@@ -458,6 +458,9 @@ size_t win_iocp_io_service::do_one(bool block, boost::system::error_code& ec)
 
 DWORD win_iocp_io_service::get_gqcs_timeout()
 {
+#if defined(BOOST_ASIO_WINDOWS_UWP)
+  return default_gqcs_timeout;
+#else
   OSVERSIONINFOEX osvi;
   ZeroMemory(&osvi, sizeof(osvi));
   osvi.dwOSVersionInfoSize = sizeof(osvi);
@@ -470,6 +473,7 @@ DWORD win_iocp_io_service::get_gqcs_timeout()
     return INFINITE;
 
   return default_gqcs_timeout;
+#endif
 }
 
 void win_iocp_io_service::do_add_timer_queue(timer_queue_base& queue)
